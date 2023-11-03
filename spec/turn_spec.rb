@@ -1,47 +1,35 @@
-require './lib/turn'
-require './lib/card'
+require 'spec_helper'
 
 RSpec.describe Turn do
-    it 'exists' do
-      turn = Turn.new("Juneau", Card)
-  
-      expect(turn).to be_instance_of(Turn)
-    end
+  it 'exists' do
+    card = Card.new("What is the capital of Alaska?", "Juneau", :Geography)
+    turn = Turn.new("Juneau", card)
 
-    it 'has a string' do
-        turn = Turn.new("Juneau", Card)
-    
-        expect(turn.string).to eq("Juneau")
-      end
+    expect(turn).to be_instance_of(Turn)
+    expect(turn.guess).to eq("Juneau")
+    expect(turn.card).to eq(card)
+  end
 
-      it 'has a card' do
-        turn = Turn.new("Juneau", Card)
-    
-        expect(turn.card).to eq(Card)
-      end
+  it 'is correct' do
+    card = Card.new("What is the capital of Alaska?", "Juneau", :Geography)
+    turn = Turn.new("Juneau", card)
 
-    it 'has a guess' do
-        turn = Turn.new("Juneau", Card)
-        expect(turn.guess).to eq(turn.string)
-    end
+    expect(turn.correct?).to eq(true)
 
-    it 'is correct' do
-        card = Card.new("What is the capital of Alaska?", "Juneau", :Geography)
-        turn = Turn.new("Juneau", Card)
-        expect(turn.guess).to eq(card.answer)
+    turn = Turn.new("Denver", card)
 
-    end
+    expect(turn.correct?).to eq(false)
+  end
 
-    it 'has correct feedback' do
-        card = Card.new("What is the capital of Alaska?", "Juneau", :Geography)
-        turn = Turn.new("Juneau", card)
-        expect(turn.feedback).to eq("Correct!") 
-    end
+  it 'gives feedback' do
+    card = Card.new("What is the capital of Alaska?", "Juneau", :Geography)
+    turn = Turn.new("Juneau", card)
 
-    it 'has incorrect feedback' do
-        card = Card.new("Which planet is closest to the sun?", "Mercury", :STEM)
-        turn = Turn.new("Saturn", card)
-        expect(turn.feedback).to eq("Incorrect.") 
-    end
+    expect(turn.feedback).to eq("Correct!") 
+
+    turn = Turn.new("Denver", card)
+
+    expect(turn.feedback).to eq("Incorrect.") 
+  end
 
 end
